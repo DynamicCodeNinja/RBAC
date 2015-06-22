@@ -52,7 +52,7 @@ interface HasRoleAndPermission
      * @return int
      */
     public function detachAllRoles();
-    
+
     /**
      * Get all permissions from roles.
      *
