@@ -280,7 +280,7 @@ trait HasRoleAndPermission
     /**
      * Attach role to a user.
      *
-     * @param int|\Bican\Roles\Models\Role $role
+     * @param int|\DCN\RBAC\Models\Role $role
      * @return null|bool
      */
     public function attachRole($role)
@@ -291,7 +291,7 @@ trait HasRoleAndPermission
     /**
      * Detach role from a user.
      *
-     * @param int|\Bican\Roles\Models\Role $role
+     * @param int|\DCN\RBAC\Models\Role $role
      * @return int
      */
     public function detachRole($role)
@@ -312,7 +312,7 @@ trait HasRoleAndPermission
     /**
      * Attach permission to a user.
      *
-     * @param int|\Bican\Roles\Models\Permission $permission
+     * @param int|\DCN\RBAC\Models\Permission $permission
      * @param bool $granted
      * @return bool|null
      */
@@ -324,7 +324,7 @@ trait HasRoleAndPermission
     /**
      * Detach permission from a user.
      *
-     * @param int|\Bican\Roles\Models\Permission $permission
+     * @param int|\DCN\RBAC\Models\Permission $permission
      * @return int
      */
     public function detachPermission($permission)

@@ -33,10 +33,9 @@ interface HasRoleAndPermission
      * Attach role to a user.
      *
      * @param int|\DCN\RBAC\Models\Role $role
-     * @param bool $granted
      * @return bool|null
      */
-    public function attachRole($role, $granted = TRUE);
+    public function attachRole($role);
 
     /**
      * Detach role from a user.
@@ -98,9 +97,10 @@ interface HasRoleAndPermission
      * Attach permission to a user.
      *
      * @param int|\DCN\RBAC\Models\Permission $permission
-     * @return null|bool
+     * @param bool $granted
+     * @return bool|null
      */
-    public function attachPermission($permission);
+    public function attachPermission($permission, $granted = TRUE);
 
     /**
      * Detach permission from a user.
