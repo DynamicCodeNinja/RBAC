@@ -1,6 +1,7 @@
 # RBAC For Laravel 5.1
 
 Powerful package for handling roles and permissions in Laravel 5 (5.1 and also 5.0).
+Based on the Bican/Roles ACL Package.
 
 - [Installation](#installation)
     - [Composer](#composer)
@@ -71,7 +72,7 @@ Add the package to your application service providers in `config/app.php` file.
 Publish the package config file and migrations to your application. Run these commands inside your terminal.
 
     php artisan vendor:publish --provider="DCN\RBAC\RolesServiceProvider" --tag=config
-    php artisan vendor:publish --provider="Bican\Roles\RolesServiceProvider" --tag=migrations
+    php artisan vendor:publish --provider="DCN\RBAC\RolesServiceProvider" --tag=migrations
 
 And also run migrations.
 
@@ -84,8 +85,8 @@ And also run migrations.
 Include `HasRoleAndPermission` trait and also implement `HasRoleAndPermission` contract inside your `User` model.
 
 ```php
-use Bican\Roles\Traits\HasRoleAndPermission;
-use Bican\Roles\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+use DCN\RBAC\Traits\HasRoleAndPermission;
+use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, HasRoleAndPermissionContract
 {
@@ -99,13 +100,12 @@ And that's it!
 ### Creating Roles
 
 ```php
-use Bican\Roles\Models\Role;
+use DCN\RBAC\Models\Role;
 
 $adminRole = Role::create([
     'name' => 'Admin',
     'slug' => 'admin',
     'description' => '', // optional
-    'level' => 1, // optional, set to 1 by default
     'parent_id' => NULL, // optional, set to NULL by default
 ]);
 
@@ -126,7 +126,7 @@ use App\User;
 
 $user = User::find($id);
 
-$user->attachRole($adminRole); // you can pass whole object, or just an id
+$user->attachRole($adminRole); //you can pass whole object, or just an id
 ```
 
 ```php
@@ -164,26 +164,21 @@ if ($user->is('admin|moderator', true)) { // or $user->is('admin, moderator', tr
 }
 ```
 
-### Levels
+As well as Wild Cards:
 
-When you are creating roles, there is optional parameter `level`. It is set to `1` by default, but you can overwrite it and then you can do something like this:
- 
 ```php
-if ($user->level() > 4) {
-    //
+if ($user->is('admin|moderator.*')) { // or $user->is('admin, moderator.*') and also $user->is(['admin', 'moderator.*'])
+    //User has admin role, or a moderator role
 }
+
 ```
-
-> If user has multiple roles, method `level` returns the highest one.
-
-`Level` has also big effect on inheriting permissions. About it later.
 
 ### Creating Permissions
 
 It's very simple thanks to `Permission` model.
 
 ```php
-use Bican\Roles\Models\Permission;
+use DCN\RBAC\Models\Permission;
 
 $createUsersPermission = Permission::create([
     'name' => 'Create users',
@@ -203,7 +198,7 @@ You can attach permissions to a role or directly to a specific user (and of cour
 
 ```php
 use App\User;
-use Bican\Roles\Models\Role;
+use DCN\RBAC\Models\Role;
 
 $role = Role::find($roleId);
 $role->attachPermission($createUsersPermission); // permission attached to a role
@@ -218,6 +213,25 @@ $role->detachAllPermissions(); // in case you want to detach all permissions
 
 $user->detachPermission($deleteUsersPermission);
 $user->detachAllPermissions();
+```
+
+### Deny Permissions
+
+You can deny a user a permission, or you can deny an entire role a permission.
+
+To do this, when attaching a permission simply pass a second parameter of false. 
+This will deny that user that permission regardless of what they are assigned.
+Denied permissions take precedent over inherited and granted permissions. 
+
+```php
+use App\User;
+use DCN\RBAC\Models\Role;
+
+$role = Role::find($roleId);
+$role->attachPermission($createUsersPermission, FALSE); // Deny this permission to all users who have or inherit this role.
+
+$user = User::find($userId);
+$user->attachPermission($deleteUsersPermission, FALSE); // Deny this permission to this user regardless of what roles they are in.
 ```
 
 ### Checking For Permissions
@@ -236,19 +250,7 @@ You can check for multiple permissions the same way as roles.
 
 ### Inheritance
 
-There are two methods of inheritance; permission based, and role based. The default is permission based. But can be changed easily in the config.
-
-> If you don't want the inheritance feature in you application, simply ignore the `level` and `parent_id` parameter when you're creating roles.
-
-#### Permission Based
-
-Role with higher level is inheriting permission from roles with lower level.
-
-There is an example of this `magic`:
-
-You have three roles: `user`, `moderator` and `admin`. User has a permission to read articles, moderator can manage comments and admin can create articles. User has a level 1, moderator level 2 and admin level 3. It means, moderator and administrator has also permission to read articles, but administrator can manage comments as well.
-
-#### Role Based
+> If you don't want the inheritance feature in you application, simply ignore the `parent_id` parameter when you're creating roles.
 
 Roles that are assigned a parent_id of another role are automatically inherited when a user is assigned or inherits the parent role.
 
@@ -271,7 +273,7 @@ Let's say you have an article and you want to edit it. This article belongs to a
 
 ```php
 use App\Article;
-use Bican\Roles\Models\Permission;
+use DCN\RBAC\Models\Permission;
 
 $editArticlesPermission = Permission::create([
     'name' => 'Edit articles',
@@ -334,8 +336,8 @@ protected $routeMiddleware = [
     'auth' => \App\Http\Middleware\Authenticate::class,
     'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
     'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-    'role' => \Bican\Roles\Middleware\VerifyRole::class,
-    'permission' => \Bican\Roles\Middleware\VerifyPermission::class,
+    'role' => \DCN\RBAC\Middleware\VerifyRole::class,
+    'permission' => \DCN\RBAC\Middleware\VerifyPermission::class,
 ];
 ```
 
@@ -355,7 +357,7 @@ $router->post('/example', [
 ]);
 ```
 
-It throws `\Bican\Roles\Exception\RoleDeniedException` or `\Bican\Roles\Exception\PermissionDeniedException` exceptions if it goes wrong.
+It throws `\DCN\RBAC\Exception\RoleDeniedException` or `\DCN\RBAC\Exception\PermissionDeniedException` exceptions if it goes wrong.
 
 You can catch these exceptions inside `app/Exceptions/Handler.php` file and do whatever you want.
 
@@ -369,7 +371,7 @@ You can catch these exceptions inside `app/Exceptions/Handler.php` file and do w
  */
 public function render($request, Exception $e)
 {
-    if ($e instanceof \Bican\Roles\Exceptions\RoleDeniedException) {
+    if ($e instanceof \DCN\RBAC\Exceptions\RoleDeniedException) {
         // you can for example flash message, redirect...
         return redirect()->back();
     }
@@ -384,8 +386,14 @@ You can change connection for models, slug separator, models path and there is a
 
 ## More Information
 
-For more information, please have a look at [HasRoleAndPermission](https://github.com/romanbican/roles/blob/master/src/Bican/Roles/Contracts/HasRoleAndPermission.php) contact.
+This project is based on [Bican/Roles](https://github.com/romanbican/roles/).
 
 ## License
 
 This package is free software distributed under the terms of the MIT license.
+
+I don't care what you do with it.
+
+## Contribute
+
+I honestly don't know what I'm doing. If you see something that could be fixed. Make a pull request on the develop branch!.
