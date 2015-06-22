@@ -37,7 +37,7 @@ trait HasRoleAndPermission
      */
     public function roles()
     {
-        return $this->belongsToMany(config('rbac.models.role'))->withTimestamps();
+        return $this->belongsToMany(config('rbac.models.role'))->withTimestamps()->withPivot('granted');;
     }
 
     /**
@@ -280,11 +280,12 @@ trait HasRoleAndPermission
      * Attach role to a user.
      *
      * @param int|\DCN\RBAC\Models\Role $role
-     * @return null|bool
+     * @param bool $granted
+     * @return bool|null
      */
-    public function attachRole($role)
+    public function attachRole($role, $granted = TRUE)
     {
-        return (!$this->getRoles()->contains($role)) ? $this->roles()->attach($role) : true;
+        return (!$this->getRoles()->contains($role)) ? $this->roles()->attach($role, array('granted' => $granted)) : true;
     }
 
     /**
