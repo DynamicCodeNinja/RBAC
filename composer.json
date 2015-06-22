@@ -1,5 +1,5 @@
 {
-    "name": "DCN/RBAC",
+    "name": "dcn/rbac",
     "description": "Powerful RBAC package for Laravel 5.1",
     "keywords": ["roles", "permissions", "rbac", "auth", "laravel", "illuminate"],
     "license": "MIT",
