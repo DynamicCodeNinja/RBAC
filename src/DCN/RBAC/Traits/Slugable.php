@@ -1,6 +1,6 @@
 <?php
 
-namespace Bican\Roles\Traits;
+namespace DCN\RBAC\Traits;
 
 use Illuminate\Support\Str;
 

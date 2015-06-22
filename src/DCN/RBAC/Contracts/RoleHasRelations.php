@@ -47,9 +47,10 @@ interface RoleHasRelations
      * Attach permission to a role.
      *
      * @param int|\DCN\RBAC\Models\Permission $permission
-     * @return int|bool
+     * @param bool $granted
+     * @return bool|int
      */
-    public function attachPermission($permission);
+    public function attachPermission($permission, $granted = TRUE);
 
     /**
      * Detach permission from a role.

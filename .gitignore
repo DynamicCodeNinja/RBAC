@@ -1,4 +1,7 @@
 /vendor
+/node_modules
+Gruntfile.js
+package.json
 composer.phar
 .DS_Store
 .php_cs.cache

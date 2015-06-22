@@ -57,25 +57,22 @@ trait HasRoleAndPermission
      */
     public function getRoles()
     {
-        if(!$this->roles)
+        if(!$this->roles){
             $this->roles = $this->roles()->get();
-
-        if(!$this->inheritedRoles){
-            $inheritedRoles = new Collection();
             foreach($this->roles as $role)
-                $inheritedRoles = $inheritedRoles->merge($role->descendants());
-            $this->inheritedRoles = $inheritedRoles;
+                $this->roles = $this->roles->merge($role->descendants());
         }
-        return  $this->roles->merge($this->inheritedRoles);
+        return  $this->roles;
     }
 
     /**
      * Get all permissions from roles.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function rolePermissions()
     {
+
         $permissions = new Collection();
         foreach ($this->getRoles() as $role)
             $permissions = $permissions->merge($role->permissions);
@@ -91,7 +88,8 @@ trait HasRoleAndPermission
     {
         if(!$this->permissions){
             $rolePermissions = $this->rolePermissions();
-            $userPermissions = $this->userPermissions;
+            $userPermissions = $this->userPermissions()->get();
+
             $deniedPermissions = new Collection();
             foreach($userPermissions as $key => $permission){
                 if(!$permission->pivot->granted)
@@ -102,6 +100,7 @@ trait HasRoleAndPermission
                     $deniedPermissions->push($permission);
             }
             $permissions = $rolePermissions->merge($userPermissions);
+
             $this->permissions = $permissions->filter(function($permission) use ($deniedPermissions)
             {
                 return !$deniedPermissions->contains($permission);
@@ -280,7 +279,7 @@ trait HasRoleAndPermission
     /**
      * Attach role to a user.
      *
-     * @param int|\Bican\Roles\Models\Role $role
+     * @param int|\DCN\RBAC\Models\Role $role
      * @return null|bool
      */
     public function attachRole($role)
@@ -291,7 +290,7 @@ trait HasRoleAndPermission
     /**
      * Detach role from a user.
      *
-     * @param int|\Bican\Roles\Models\Role $role
+     * @param int|\DCN\RBAC\Models\Role $role
      * @return int
      */
     public function detachRole($role)
@@ -312,7 +311,7 @@ trait HasRoleAndPermission
     /**
      * Attach permission to a user.
      *
-     * @param int|\Bican\Roles\Models\Permission $permission
+     * @param int|\DCN\RBAC\Models\Permission $permission
      * @param bool $granted
      * @return bool|null
      */
@@ -324,7 +323,7 @@ trait HasRoleAndPermission
     /**
      * Detach permission from a user.
      *
-     * @param int|\Bican\Roles\Models\Permission $permission
+     * @param int|\DCN\RBAC\Models\Permission $permission
      * @return int
      */
     public function detachPermission($permission)
