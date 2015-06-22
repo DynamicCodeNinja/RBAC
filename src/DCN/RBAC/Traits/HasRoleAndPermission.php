@@ -16,16 +16,6 @@ trait HasRoleAndPermission
     protected $roles;
 
     /**
-     * Property for caching denied roles.
-     * Only used for nested inheritance
-     *
-     * @var \Illuminate\Database\Eloquent\Collection|null
-     */
-    protected $deniedRoles;
-
-
-
-    /**
      * Property for caching permissions.
      *
      * @var \Illuminate\Database\Eloquent\Collection|null
@@ -50,7 +40,7 @@ trait HasRoleAndPermission
     }
 
     /**
-     * Get only Granted Roles
+     * Get only Denied Roles
      */
     public function deniedRoles() {
         return $this->roles()->wherePivot('granted', false);
@@ -67,27 +57,38 @@ trait HasRoleAndPermission
     }
 
     /**
+     * Get only Granted Permissions
+     */
+    public function grantedPermissions() {
+        return $this->userPermissions()->wherePivot('granted', true);
+    }
+
+    /**
+     * Get only Denied Permissions
+     */
+    public function deniedPermissions() {
+        return $this->userPermissions()->wherePivot('granted', false);
+    }
+
+    /**
      * Get all roles as collection.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getRoles()
     {
-        if(!$this->deniedRoles){
-            $this->deniedRoles = $this->deniedRoles()->get();
-            foreach($this->deniedRoles as $role)
-                $this->deniedRoles = $this->deniedRoles->merge($role->descendants());
-        }
         if(!$this->roles){
             $this->roles = $this->grantedRoles()->get();
 
+            $deniedRoles = $this->deniedRoles()->get();
+            foreach($deniedRoles as $role)
+                $deniedRoles = $deniedRoles->merge($role->descendants());
+
             foreach($this->roles as $role)
-                if(!$this->deniedRoles->contains($role))
+                if(!$deniedRoles->contains($role))
                     $this->roles = $this->roles->merge($role->descendants());
 
-            $deniedRoles = $this->deniedRoles;
-            $this->roles = $this->roles->filter(function($role) use ($deniedRoles)
-            {
+            $this->roles = $this->roles->filter(function($role) use ($deniedRoles){
                 return !$deniedRoles->contains($role);
             });
         }
@@ -117,18 +118,10 @@ trait HasRoleAndPermission
     {
         if(!$this->permissions){
             $rolePermissions = $this->rolePermissions();
-            $userPermissions = $this->userPermissions()->get();
+            $userPermissions = $this->grantedPermissions()->get();
 
-            $deniedPermissions = new Collection();
-            foreach($userPermissions as $key => $permission){
-                if(!$permission->pivot->granted)
-                    $deniedPermissions->push($permission);
-            }
-            foreach($rolePermissions as $key => $permission){
-                if(!$permission->pivot->granted)
-                    $deniedPermissions->push($permission);
-            }
             $permissions = $rolePermissions->merge($userPermissions);
+            $deniedPermissions =$this->deniedPermissions()->get();
 
             $this->permissions = $permissions->filter(function($permission) use ($deniedPermissions)
             {
