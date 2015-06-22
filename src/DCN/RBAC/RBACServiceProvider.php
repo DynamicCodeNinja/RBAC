@@ -14,7 +14,7 @@ class RBACServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../config/roles.php' => config_path('roles.php')
+            __DIR__ . '/../../config/rbac.php' => config_path('rbac.php')
         ], 'config');
 
         $this->publishes([
@@ -31,7 +31,7 @@ class RBACServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../../config/roles.php', 'roles');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/rbac.php', 'rbac');
     }
 
     /**
