@@ -1,12 +1,12 @@
 {
-    "name": "bican/roles",
-    "description": "Powerful package for handling roles and permissions in Laravel 5.",
-    "keywords": ["roles", "permissions", "acl", "auth", "laravel", "illuminate"],
+    "name": "DCN/RBAC",
+    "description": "Powerful RBAC package for Laravel 5.1",
+    "keywords": ["roles", "permissions", "rbac", "auth", "laravel", "illuminate"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Roman Bičan",
-            "email": "romanbican@seznam.cz"
+            "name": "Will G",
+            "email": "willg@cloudmy.it"
         }
     ],
     "require": {
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Bican\\Roles": "src/"
+            "DCN\\RBAC": "src/"
         }
     }
 }
