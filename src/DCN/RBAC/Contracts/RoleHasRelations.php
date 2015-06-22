@@ -36,6 +36,7 @@ interface RoleHasRelations
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function children();
+
     /**
      * Roles children, grand children, etc.
      *

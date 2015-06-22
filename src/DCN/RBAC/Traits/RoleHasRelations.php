@@ -63,6 +63,7 @@ trait RoleHasRelations
 
         foreach($descendants as $descendant)
             $descendants = $descendants->merge($descendant->descendants());
+
         return $descendants;
     }
 

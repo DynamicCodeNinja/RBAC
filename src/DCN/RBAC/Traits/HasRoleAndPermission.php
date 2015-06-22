@@ -16,12 +16,14 @@ trait HasRoleAndPermission
     protected $roles;
 
     /**
-     * Property for caching inherited roles.
+     * Property for caching denied roles.
      * Only used for nested inheritance
      *
      * @var \Illuminate\Database\Eloquent\Collection|null
      */
-    protected $inheritedRoles;
+    protected $deniedRoles;
+
+
 
     /**
      * Property for caching permissions.
@@ -37,7 +39,21 @@ trait HasRoleAndPermission
      */
     public function roles()
     {
-        return $this->belongsToMany(config('rbac.models.role'))->withTimestamps();
+        return $this->belongsToMany(config('rbac.models.role'))->withTimestamps()->withPivot('granted');
+    }
+
+    /**
+     * Get only Granted Roles
+     */
+    public function grantedRoles() {
+        return $this->roles()->wherePivot('granted', true);
+    }
+
+    /**
+     * Get only Granted Roles
+     */
+    public function deniedRoles() {
+        return $this->roles()->wherePivot('granted', false);
     }
 
     /**
@@ -57,10 +73,23 @@ trait HasRoleAndPermission
      */
     public function getRoles()
     {
+        if(!$this->deniedRoles){
+            $this->deniedRoles = $this->deniedRoles()->get();
+            foreach($this->deniedRoles as $role)
+                $this->deniedRoles = $this->deniedRoles->merge($role->descendants());
+        }
         if(!$this->roles){
-            $this->roles = $this->roles()->get();
+            $this->roles = $this->grantedRoles()->get();
+
             foreach($this->roles as $role)
-                $this->roles = $this->roles->merge($role->descendants());
+                if(!$this->deniedRoles->contains($role))
+                    $this->roles = $this->roles->merge($role->descendants());
+
+            $deniedRoles = $this->deniedRoles;
+            $this->roles = $this->roles->filter(function($role) use ($deniedRoles)
+            {
+                return !$deniedRoles->contains($role);
+            });
         }
         return  $this->roles;
     }
@@ -280,11 +309,12 @@ trait HasRoleAndPermission
      * Attach role to a user.
      *
      * @param int|\DCN\RBAC\Models\Role $role
-     * @return null|bool
+     * @param bool $granted
+     * @return bool|null
      */
-    public function attachRole($role)
+    public function attachRole($role, $granted = TRUE)
     {
-        return (!$this->getRoles()->contains($role)) ? $this->roles()->attach($role) : true;
+        return (!$this->getRoles()->contains($role)) ? $this->roles()->attach($role, array('granted' => $granted)) : true;
     }
 
     /**
