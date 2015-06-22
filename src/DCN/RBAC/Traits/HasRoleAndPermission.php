@@ -76,6 +76,7 @@ trait HasRoleAndPermission
      */
     public function rolePermissions()
     {
+
         $permissions = new Collection();
         foreach ($this->getRoles() as $role)
             $permissions = $permissions->merge($role->permissions);
@@ -91,17 +92,15 @@ trait HasRoleAndPermission
     {
         if(!$this->permissions){
             $rolePermissions = $this->rolePermissions();
-            $userPermissions = $this->userPermissions;
+            $userPermissions = $this->userPermissions()->get();
+
             $deniedPermissions = new Collection();
             foreach($userPermissions as $key => $permission){
                 if(!$permission->pivot->granted)
                     $deniedPermissions->push($permission);
             }
-            foreach($rolePermissions as $key => $permission){
-                if(!$permission->pivot->granted)
-                    $deniedPermissions->push($permission);
-            }
             $permissions = $rolePermissions->merge($userPermissions);
+
             $this->permissions = $permissions->filter(function($permission) use ($deniedPermissions)
             {
                 return !$deniedPermissions->contains($permission);
@@ -168,7 +167,7 @@ trait HasRoleAndPermission
     protected function hasRole($role)
     {
         return $this->getRoles()->contains(function ($key, $value) use ($role) {
-            return $role == $value->id || Str::is($role, $value->slug);
+            return $role == $value->id || str_is($role, $value->slug);
         });
     }
     
@@ -231,7 +230,7 @@ trait HasRoleAndPermission
     protected function hasPermission($permission)
     {
         return $this->getPermissions()->contains(function ($key, $value) use ($permission) {
-            return $permission == $value->id || Str::is($permission, $value->slug);
+            return $permission == $value->id || str_is($permission, $value->slug);
         });
     }
 
