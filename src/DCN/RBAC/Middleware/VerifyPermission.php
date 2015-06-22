@@ -1,12 +1,12 @@
 <?php
 
-namespace Bican\Roles\Middleware;
+namespace DCN\RBAC\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Bican\Roles\Exceptions\RoleDeniedException;
+use DCN\RBAC\Exceptions\PermissionDeniedException;
 
-class VerifyRole
+class VerifyPermission
 {
     /**
      * @var \Illuminate\Contracts\Auth\Guard
@@ -29,16 +29,16 @@ class VerifyRole
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
-     * @param int|string $role
+     * @param int|string $permission
      * @return mixed
-     * @throws \Bican\Roles\Exceptions\RoleDeniedException
+     * @throws \DCN\RBAC\Exceptions\PermissionDeniedException
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, $permission)
     {
-        if ($this->auth->check() && $this->auth->user()->is($role)) {
+        if ($this->auth->check() && $this->auth->user()->can($permission)) {
             return $next($request);
         }
 
-        throw new RoleDeniedException($role);
+        throw new PermissionDeniedException($permission);
     }
 }

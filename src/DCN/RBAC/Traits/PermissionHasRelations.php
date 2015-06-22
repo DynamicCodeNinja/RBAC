@@ -1,6 +1,6 @@
 <?php
 
-namespace Bican\Roles\Traits;
+namespace DCN\RBAC\Traits;
 
 trait PermissionHasRelations
 {
@@ -11,7 +11,7 @@ trait PermissionHasRelations
      */
     public function roles()
     {
-        return $this->belongsToMany(config('roles.models.role'))->withTimestamps();
+        return $this->belongsToMany(config('rbac.models.role'))->withTimestamps();
     }
 
     /**

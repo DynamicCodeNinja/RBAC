@@ -12,6 +12,6 @@ trait Slugable
      */
     public function setSlugAttribute($value)
     {
-        $this->attributes['slug'] = str_slug($value, config('roles.separator'));
+        $this->attributes['slug'] = str_slug($value, config('rbac.separator'));
     }
 }

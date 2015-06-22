@@ -1,6 +1,6 @@
 <?php
 
-namespace Bican\Roles;
+namespace DCN\RBAC;
 
 use Illuminate\Support\ServiceProvider;
 

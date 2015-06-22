@@ -1,22 +1,22 @@
 <?php
 
-namespace Bican\Roles\Models;
+namespace DCN\RBAC\Models;
 
-use Bican\Roles\Traits\Slugable;
+use DCN\RBAC\Traits\Slugable;
 use Illuminate\Database\Eloquent\Model;
-use Bican\Roles\Traits\RoleHasRelations;
-use Bican\Roles\Contracts\RoleHasRelations as RoleHasRelationsContract;
+use DCN\RBAC\Traits\PermissionHasRelations;
+use DCN\RBAC\Contracts\PermissionHasRelations as PermissionHasRelationsContract;
 
-class Role extends Model implements RoleHasRelationsContract
+class Permission extends Model implements PermissionHasRelationsContract
 {
-    use Slugable, RoleHasRelations;
+    use Slugable, PermissionHasRelations;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'slug', 'description', 'level'];
+    protected $fillable = ['name', 'slug', 'description', 'model'];
 
     /**
      * Create a new model instance.
@@ -28,7 +28,7 @@ class Role extends Model implements RoleHasRelationsContract
     {
         parent::__construct($attributes);
 
-        if ($connection = config('roles.connection')) {
+        if ($connection = config('rbac.connection')) {
             $this->connection = $connection;
         }
     }
