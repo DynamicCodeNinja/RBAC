@@ -55,7 +55,7 @@ interface HasRoleAndPermission
     /**
      * Get all permissions from roles.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function rolePermissions();
 

@@ -57,22 +57,18 @@ trait HasRoleAndPermission
      */
     public function getRoles()
     {
-        if(!$this->roles)
+        if(!$this->roles){
             $this->roles = $this->roles()->get();
-
-        if(!$this->inheritedRoles){
-            $inheritedRoles = new Collection();
             foreach($this->roles as $role)
-                $inheritedRoles = $inheritedRoles->merge($role->descendants());
-            $this->inheritedRoles = $inheritedRoles;
+                $this->roles = $this->roles->merge($role->descendants());
         }
-        return  $this->roles->merge($this->inheritedRoles);
+        return  $this->roles;
     }
 
     /**
      * Get all permissions from roles.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function rolePermissions()
     {
