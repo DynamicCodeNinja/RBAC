@@ -1,7 +1,7 @@
 # RBAC For Laravel 5.1
 
 Powerful package for handling roles and permissions in Laravel 5 (5.1 and also 5.0).
-Based on the Bican/Roles ACL Package.
+Based on the [Bican/Roles](https://github.com/romanbican/roles/) Package.
 
 - [Installation](#installation)
     - [Composer](#composer)
@@ -11,9 +11,11 @@ Based on the Bican/Roles ACL Package.
 - [Usage](#usage)
     - [Creating Roles](#creating-roles)
     - [Attaching And Detaching Roles](#attaching-and-detaching-roles)
+    - [Deny Roles](#deny-roles)
     - [Checking For Roles](#checking-for-roles)
     - [Creating Permissions](#creating-permissions)
     - [Attaching And Detaching Permissions](#attaching-and-detaching-permissions)
+    - [Deny Permissions](#deny-permissions)
     - [Checking For Permissions](#checking-for-permissions)
     - [Inheritance](#inheritance)
     - [Entity Check](#entity-check)
@@ -71,8 +73,8 @@ Add the package to your application service providers in `config/app.php` file.
 
 Publish the package config file and migrations to your application. Run these commands inside your terminal.
 
-    php artisan vendor:publish --provider="DCN\RBAC\RolesServiceProvider" --tag=config
-    php artisan vendor:publish --provider="DCN\RBAC\RolesServiceProvider" --tag=migrations
+    php artisan vendor:publish --provider="DCN\RBAC\RBACServiceProvider" --tag=config
+    php artisan vendor:publish --provider="DCN\RBAC\RBACServiceProvider" --tag=migrations
 
 And also run migrations.
 
@@ -132,6 +134,21 @@ $user->attachRole($adminRole); //you can pass whole object, or just an id
 ```php
 $user->detachRole($adminRole); // in case you want to detach role
 $user->detachAllRoles(); // in case you want to detach all roles
+```
+
+### Deny Roles
+
+To deny a user a role and all of its children roles, see the following example.
+
+We recommend that you plan your roles accordingly if you plan on using this feature. As you could easily lock out users without realizing it.
+
+```php
+use App\User;
+
+$role = Role::find($roleId);
+
+$user = User::find($userId);
+$user->attachRole($role, FALSE); // Deny this role, and all of its decedents to the user regardless of what has been assigned.
 ```
 
 ### Checking For Roles
