@@ -99,6 +99,10 @@ trait HasRoleAndPermission
                 if(!$permission->pivot->granted)
                     $deniedPermissions->push($permission);
             }
+            foreach($rolePermissions as $key => $permission){
+                if(!$permission->pivot->granted)
+                    $deniedPermissions->push($permission);
+            }
             $permissions = $rolePermissions->merge($userPermissions);
 
             $this->permissions = $permissions->filter(function($permission) use ($deniedPermissions)
