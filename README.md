@@ -285,14 +285,14 @@ And the `Blog Admins Role` only inherits the `Blog Writers Role`.
 
 And A Database View:
 
-| id | slug        | parent_id |
-| -- | ----------- | --------- |
-|  1 | admin       | NULL      |
-|  2 | admin.user  | 1         |
-|  3 | admin.blog  | 1         |
-|  4 | blog.writer | 3         |
-
-First Header  | Second Header
+id  | slug        | parent_id   |
+--- | ----------- | ----------- |
+1   | admin       | NULL        |
+2   | admin.user  | 1           |
+3   | admin.blog  | 1           |
+4   | blog.writer | 3           | 
+ 
+id            | S
 ------------- | -------------
 Content Cell  | Content Cell
 Content Cell  | Content Cell
