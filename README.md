@@ -1,6 +1,6 @@
 # RBAC For Laravel 5.1
 
-Powerful package for handling roles and permissions in Laravel 5 (5.1 and also 5.0).
+Powerful package for handling roles and permissions in Laravel 5.1
 
 Based on the [Bican/Roles](https://github.com/romanbican/roles/) Package.
 
@@ -285,15 +285,28 @@ Here is an example:
 
 You have 5 administrative groups. Admins, Store Admins, Store Inventory Managers, Blog Admins, and Blog Writers.
 
+Role                       | Parent       |
+-----------                | -----------  |
+Admins                     |              |
+Store Admins               | Admins       |
+Store Inventory Managers   | Store Admins |
+Blog Admins                | Admins       |
+Blog Writers               | Blog Admins  |
+
 The `Admins Role` is the parent of both `Store Admins Role` as well as `Blog Admins Role`.
+
 While the `Store Admins Role` is the parent to `Store Inventory Managers Role`.
+
 And the `Blog Admins Role` is the parent to `Blog Writers`.
 
 This enables the `Admins Role` to inherit both `Store Inventory Managers Role` and `Blog Writers Role`.
+
 But the `Store Admins Role` only inherits the `Store Inventory Managers Role`,
+
 And the `Blog Admins Role` only inherits the `Blog Writers Role`.
 
-And A Database View:
+
+Another Example:
 
 id  | slug        | parent_id   |
 --- | ----------- | ----------- |
@@ -301,11 +314,14 @@ id  | slug        | parent_id   |
 2   | admin.user  | 1           |
 3   | admin.blog  | 1           |
 4   | blog.writer | 3           |
+5   | development | NULL        |
 
 Here, 
-`admin` inherits `admin.user`, `admin.blog`, and `blog.writer`,
-`admin.user` doesn't inherit anything,
-and `admin.blog` inherits `blog.writer`.
+`admin` inherits `admin.user`, `admin.blog`, and `blog.writer`.
+
+While `admin.user` doesn't inherit anything, and `admin.blog` inherits `blog.writer`.
+
+Nothing inherits `development` and, `development` doesn't inherit anything.
 
 
 ### Entity Check
