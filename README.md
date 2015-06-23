@@ -38,7 +38,7 @@ Pull this package in through Composer (file `composer.json`).
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
-        "dcn/rbac": "~1.0.0"
+        "dcn/rbac": "~1.1.0"
     }
 }
 ```
@@ -64,7 +64,7 @@ Add the package to your application service providers in `config/app.php` file.
     /**
      * Third Party Service Providers...
      */
-    DCN\RBAC\RolesServiceProvider::class,
+    DCN\RBAC\RBACServiceProvider::class,
 
 ],
 ```
