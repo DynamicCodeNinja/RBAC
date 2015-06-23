@@ -1,6 +1,6 @@
 # RBAC For Laravel 5.1
 
-Powerful package for handling roles and permissions in Laravel 5 (5.1 and also 5.0).
+Powerful package for handling roles and permissions in Laravel 5.1
 
 Based on the [Bican/Roles](https://github.com/romanbican/roles/) Package.
 
