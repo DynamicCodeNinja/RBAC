@@ -285,7 +285,6 @@ And the `Blog Admins Role` only inherits the `Blog Writers Role`.
 
 And A Database View:
 
-
 | id | slug        | parent_id |
 | -- | ----------- | --------- |
 |  1 | admin       | NULL      |
@@ -293,6 +292,10 @@ And A Database View:
 |  3 | admin.blog  | 1         |
 |  4 | blog.writer | 3         |
 
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
 
 
 ### Entity Check
