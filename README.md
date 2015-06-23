@@ -38,7 +38,7 @@ Pull this package in through Composer (file `composer.json`).
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
-        "dcn/rbac": "~1.0.0"
+        "dcn/rbac": "~1.1.0"
     }
 }
 ```
@@ -64,7 +64,7 @@ Add the package to your application service providers in `config/app.php` file.
     /**
      * Third Party Service Providers...
      */
-    DCN\RBAC\RolesServiceProvider::class,
+    DCN\RBAC\RBACServiceProvider::class,
 
 ],
 ```
@@ -282,6 +282,20 @@ And the `Blog Admins Role` is the parent to `Blog Writers`.
 This enables the `Admins Role` to inherit both `Store Inventory Managers Role` and `Blog Writers Role`.
 But the `Store Admins Role` only inherits the `Store Inventory Managers Role`,
 And the `Blog Admins Role` only inherits the `Blog Writers Role`.
+
+And A Database View:
+
+id  | slug        | parent_id   |
+--- | ----------- | ----------- |
+1   | admin       | NULL        |
+2   | admin.user  | 1           |
+3   | admin.blog  | 1           |
+4   | blog.writer | 3           |
+
+Here, 
+`admin` inherits `admin.user`, `admin.blog`, and `blog.writer`,
+`admin.user` doesn't inherit anything,
+and `admin.blog` inherits `blog.writer`.
 
 
 ### Entity Check
