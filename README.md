@@ -1,7 +1,17 @@
 # RBAC For Laravel 5.1
 
 Powerful package for handling roles and permissions in Laravel 5 (5.1 and also 5.0).
+
 Based on the [Bican/Roles](https://github.com/romanbican/roles/) Package.
+
+### So whats Different?
+
+The difference is how [Inheritance](#inheritance) work. With Bican/Roles, permissions are inherited based on your highest `role level`.
+
+Instead this package uses a `parent_id` column to enable roles to be inherited from each other. 
+
+This enables us to only pull permissions of roles that our users inherits, or that are directly assigned to the user.
+
 
 - [Installation](#installation)
     - [Composer](#composer)

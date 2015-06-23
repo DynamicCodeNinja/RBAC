@@ -17,7 +17,6 @@ class VerifyPermission
      * Create a new filter instance.
      *
      * @param \Illuminate\Contracts\Auth\Guard $auth
-     * @return void
      */
     public function __construct(Guard $auth)
     {
