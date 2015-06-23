@@ -307,7 +307,10 @@ trait HasRoleAndPermission
      */
     public function attachRole($role, $granted = TRUE)
     {
-        return (!$this->getRoles()->contains($role)) ? $this->roles()->attach($role, array('granted' => $granted)) : true;
+        if($granted)
+            return (!$this->grantedRoles()->get()->contains($role)) ? $this->roles()->attach($role, array('granted' => TRUE)) : true;
+        else
+            return (!$this->deniedRoles()->get()->contains($role)) ? $this->roles()->attach($role, array('granted' => FALSE)) : true;
     }
 
     /**
@@ -340,7 +343,11 @@ trait HasRoleAndPermission
      */
     public function attachPermission($permission, $granted = true)
     {
-        return (!$this->getPermissions()->contains($permission)) ? $this->userPermissions()->attach($permission, array('granted' => $granted)) : true;
+        if($granted)
+            return (!$this->grantedPermissions()->get()->contains($permission)) ? $this->userPermissions()->attach($permission, array('granted' => TRUE)) : true;
+        else
+            return (!$this->deniedPermissions()->get()->contains($permission)) ? $this->userPermissions()->attach($permission, array('granted' => FALSE)) : true;
+
     }
 
     /**
