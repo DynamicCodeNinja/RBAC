@@ -283,6 +283,17 @@ This enables the `Admins Role` to inherit both `Store Inventory Managers Role` a
 But the `Store Admins Role` only inherits the `Store Inventory Managers Role`,
 And the `Blog Admins Role` only inherits the `Blog Writers Role`.
 
+And A Database View:
+
+
+| id | slug        | parent_id |
+| -- | ----------- | --------- |
+|  1 | admin       | NULL      |
+|  2 | admin.user  | 1         |
+|  3 | admin.blog  | 1         |
+|  4 | blog.writer | 3         |
+
+
 
 ### Entity Check
 
