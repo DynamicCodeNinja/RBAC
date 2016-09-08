@@ -137,7 +137,7 @@ trait HasRoleAndPermission
      * @param bool $all
      * @return bool
      */
-    public function is($role, $all = false)
+    public function roleIs($role, $all = false)
     {
         if ($this->isPretendEnabled()) {
             return $this->pretend('is');
@@ -188,7 +188,7 @@ trait HasRoleAndPermission
      */
     protected function hasRole($role)
     {
-        return $this->getRoles()->contains(function ($key, $value) use ($role) {
+        return $this->getRoles()->contains(function ($value, $key) use ($role) {
             return $role == $value->id || Str::is($role, $value->slug);
         });
     }
@@ -200,7 +200,7 @@ trait HasRoleAndPermission
      * @param bool $all
      * @return bool
      */
-    public function can($permission, $all = false)
+    public function may($permission, $all = false)
     {
         if ($this->isPretendEnabled()) {
             return $this->pretend('can');
@@ -251,7 +251,7 @@ trait HasRoleAndPermission
      */
     protected function hasPermission($permission)
     {
-        return $this->getPermissions()->contains(function ($key, $value) use ($permission) {
+        return $this->getPermissions()->contains(function ($value, $key) use ($permission) {
             return $permission == $value->id || Str::is($permission, $value->slug);
         });
     }
@@ -424,10 +424,10 @@ trait HasRoleAndPermission
      */
     public function __call($method, $parameters)
     {
-        if (starts_with($method, 'is')) {
-            return $this->is(snake_case(substr($method, 2), config('roles.separator')));
-        } elseif (starts_with($method, 'can')) {
-            return $this->can(snake_case(substr($method, 3), config('roles.separator')));
+        if (starts_with($method, 'roleIs')) {
+            return $this->roleIs(snake_case(substr($method, 2), config('roles.separator')));
+        } elseif (starts_with($method, 'may')) {
+            return $this->may(snake_case(substr($method, 3), config('roles.separator')));
         } elseif (starts_with($method, 'allowed')) {
             return $this->allowed(snake_case(substr($method, 7), config('roles.separator')), $parameters[0], (isset($parameters[1])) ? $parameters[1] : true, (isset($parameters[2])) ? $parameters[2] : 'user_id');
         }

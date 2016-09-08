@@ -27,7 +27,7 @@ interface HasRoleAndPermission
      * @param bool $all
      * @return bool
      */
-    public function is($role, $all = false);
+    public function roleIs($role, $all = false);
 
     /**
      * Attach role to a user.
@@ -81,7 +81,7 @@ interface HasRoleAndPermission
      * @param bool $all
      * @return bool
      */
-    public function can($permission, $all = false);
+    public function may($permission, $all = false);
 
     /**
      * Check if the user is allowed to manipulate with entity.
