@@ -1,6 +1,6 @@
-# RBAC For Laravel 5.1
+# RBAC For Laravel 5.3
 
-Powerful package for handling roles and permissions in Laravel 5.1
+Powerful package for handling roles and permissions in Laravel 5.3
 
 Based on the [Bican/Roles](https://github.com/romanbican/roles/) Package.
 
@@ -168,7 +168,7 @@ $user->attachRole($role, FALSE); // Deny this role, and all of its decedents to 
 You can now check if the user has required role.
 
 ```php
-if ($user->is('admin')) { // you can pass an id or slug
+if ($user->roleIs('admin')) { // you can pass an id or slug
     //
 }
 ```
@@ -184,11 +184,11 @@ if ($user->isAdmin()) {
 And of course, there is a way to check for multiple roles:
 
 ```php
-if ($user->is('admin|moderator')) { // or $user->is('admin, moderator') and also $user->is(['admin', 'moderator'])
+if ($user->roleIs('admin|moderator')) { // or $user->roleIs('admin, moderator') and also $user->roleIs(['admin', 'moderator'])
     // if user has at least one role
 }
 
-if ($user->is('admin|moderator', true)) { // or $user->is('admin, moderator', true) and also $user->is(['admin', 'moderator'], true)
+if ($user->roleIs('admin|moderator', true)) { // or $user->roleIs('admin, moderator', true) and also $user->roleIs(['admin', 'moderator'], true)
     // if user has all roles
 }
 ```
@@ -196,7 +196,7 @@ if ($user->is('admin|moderator', true)) { // or $user->is('admin, moderator', tr
 As well as Wild Cards:
 
 ```php
-if ($user->is('admin|moderator.*')) { // or $user->is('admin, moderator.*') and also $user->is(['admin', 'moderator.*'])
+if ($user->roleIs('admin|moderator.*')) { // or $user->roleIs('admin, moderator.*') and also $user->roleIs(['admin', 'moderator.*'])
     //User has admin role, or a moderator role
 }
 
@@ -266,7 +266,7 @@ $user->attachPermission($deleteUsersPermission, FALSE); // Deny this permission 
 ### Checking For Permissions
 
 ```php
-if ($user->can('create.users') { // you can pass an id or slug
+if ($user->may('create.users') { // you can pass an id or slug
     //
 }
 
@@ -362,11 +362,11 @@ if ($user->allowed('edit.articles', $article, false)) { // now owner check is di
 There are three Blade extensions. Basically, it is replacement for classic if statements.
 
 ```php
-@role('admin') // @if(Auth::check() && Auth::user()->is('admin'))
+@role('admin') // @if(Auth::check() && Auth::user()->roleIs('admin'))
     // user is admin
 @endrole
 
-@permission('edit.articles') // @if(Auth::check() && Auth::user()->can('edit.articles'))
+@permission('edit.articles') // @if(Auth::check() && Auth::user()->may('edit.articles'))
     // user can edit articles
 @endpermission
 
@@ -374,7 +374,7 @@ There are three Blade extensions. Basically, it is replacement for classic if st
     // show edit button
 @endallowed
 
-@role('admin|moderator', 'all') // @if(Auth::check() && Auth::user()->is('admin|moderator', 'all'))
+@role('admin|moderator', 'all') // @if(Auth::check() && Auth::user()->roleIs('admin|moderator', 'all'))
     // user is admin and also moderator
 @else
     // something else
