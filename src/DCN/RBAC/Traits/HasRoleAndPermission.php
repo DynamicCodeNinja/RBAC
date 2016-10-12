@@ -425,11 +425,13 @@ trait HasRoleAndPermission
     public function __call($method, $parameters)
     {
         if (starts_with($method, 'roleIs')) {
-            return $this->roleIs(snake_case(substr($method, 2), config('roles.separator')));
+            return $this->roleIs(snake_case(substr($method, 6), config('roles.separator')));
         } elseif (starts_with($method, 'may')) {
             return $this->may(snake_case(substr($method, 3), config('roles.separator')));
         } elseif (starts_with($method, 'allowed')) {
             return $this->allowed(snake_case(substr($method, 7), config('roles.separator')), $parameters[0], (isset($parameters[1])) ? $parameters[1] : true, (isset($parameters[2])) ? $parameters[2] : 'user_id');
+        } elseif (starts_with($method, 'hasRole')) {
+            return $this->hasRole(isset($parameters[0]) ? $parameters[0] : snake_case(substr($method, 7), config('roles.separator')));
         }
 
         return parent::__call($method, $parameters);
