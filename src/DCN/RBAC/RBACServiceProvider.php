@@ -44,7 +44,7 @@ class RBACServiceProvider extends ServiceProvider
         $blade = $this->app['view']->getEngineResolver()->resolve('blade')->getCompiler();
 
         $blade->directive('role', function ($expression) {
-            return "<?php if (Auth::check() && Auth::user()->is{$expression}): ?>";
+            return "<?php if (Auth::check() && Auth::user()->roleIs({$expression})): ?>";
         });
 
         $blade->directive('endrole', function () {
@@ -52,7 +52,7 @@ class RBACServiceProvider extends ServiceProvider
         });
 
         $blade->directive('permission', function ($expression) {
-            return "<?php if (Auth::check() && Auth::user()->can{$expression}): ?>";
+            return "<?php if (Auth::check() && Auth::user()->can({$expression})): ?>";
         });
 
         $blade->directive('endpermission', function () {
@@ -60,7 +60,7 @@ class RBACServiceProvider extends ServiceProvider
         });
 
         $blade->directive('allowed', function ($expression) {
-            return "<?php if (Auth::check() && Auth::user()->allowed{$expression}): ?>";
+            return "<?php if (Auth::check() && Auth::user()->allowed({$expression})): ?>";
         });
 
         $blade->directive('endallowed', function () {
