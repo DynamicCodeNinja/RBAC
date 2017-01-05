@@ -1,4 +1,4 @@
-# [No Longer Maintained, Pull Requests Accepted!]
+## [No Longer Maintained, Pull Requests Accepted!]
 # RBAC For Laravel 5.3
 Powerful package for handling roles and permissions in Laravel 5.3
 
