@@ -28,16 +28,17 @@ class VerifyPermission
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
-     * @param int|string $permission
+     * @param int|string $permissions
      * @return mixed
      * @throws \DCN\RBAC\Exceptions\PermissionDeniedException
      */
-    public function handle($request, Closure $next, $permission)
+    public function handle($request, Closure $next, ...$permissions)
     {
-        if ($this->auth->check() && $this->auth->user()->may($permission)) {
+        $all = filter_var(array_values(array_slice($permissions, -1))[0], FILTER_VALIDATE_BOOLEAN);
+        if ($this->auth->check() && $this->auth->user()->may($permissions, $all)) {
             return $next($request);
         }
 
-        throw new PermissionDeniedException($permission);
+        throw new PermissionDeniedException(implode(',', $permissions));
     }
 }

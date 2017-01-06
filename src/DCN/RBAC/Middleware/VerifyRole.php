@@ -32,12 +32,13 @@ class VerifyRole
      * @return mixed
      * @throws \DCN\RBAC\Exceptions\RoleDeniedException
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$roles)
     {
-        if ($this->auth->check() && $this->auth->user()->roleIs($role)) {
+        $all = filter_var(array_values(array_slice($roles, -1))[0], FILTER_VALIDATE_BOOLEAN);
+        if ($this->auth->check() && $this->auth->user()->roleIs($roles, $all)) {
             return $next($request);
         }
 
-        throw new RoleDeniedException($role);
+        throw new RoleDeniedException(implode(',', $roles));
     }
 }
