@@ -1,5 +1,6 @@
 ## [No Longer Maintained, Pull Requests Accepted!]
 Check out https://github.com/mbm-rafal/RBAC
+
 # RBAC For Laravel 5.3
 Powerful package for handling roles and permissions in Laravel 5.3
 
@@ -9,7 +10,7 @@ Based on the [Bican/Roles](https://github.com/romanbican/roles/) Package.
 
 The difference is how [Inheritance](#inheritance) work. With Bican/Roles, permissions are inherited based on your highest `role level`.
 
-Instead this package uses a `parent_id` column to enable roles to be inherited from each other. 
+Instead this package uses a `parent_id` column to enable roles to be inherited from each other.
 
 This enables us to only pull permissions of roles that our users inherits, or that are directly assigned to the user.
 
@@ -51,7 +52,7 @@ Pull this package in through Composer (file `composer.json`).
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
-        "dcn/rbac": "~1.1.0"
+        "dcn/rbac": "~2.0"
     }
 }
 ```
@@ -66,14 +67,14 @@ Add the package to your application service providers in `config/app.php` file.
 
 ```php
 'providers' => [
-    
+
     /*
      * Laravel Framework Service Providers...
      */
     Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
     Illuminate\Auth\AuthServiceProvider::class,
     ...
-    
+
     /**
      * Third Party Service Providers...
      */
@@ -249,9 +250,9 @@ $user->detachAllPermissions();
 
 You can deny a user a permission, or you can deny an entire role a permission.
 
-To do this, when attaching a permission simply pass a second parameter of false. 
+To do this, when attaching a permission simply pass a second parameter of false.
 This will deny that user that permission regardless of what they are assigned.
-Denied permissions take precedent over inherited and granted permissions. 
+Denied permissions take precedent over inherited and granted permissions.
 
 ```php
 use App\User;
@@ -319,7 +320,7 @@ id  | slug        | parent_id   |
 4   | blog.writer | 3           |
 5   | development | NULL        |
 
-Here, 
+Here,
 `admin` inherits `admin.user`, `admin.blog`, and `blog.writer`.
 
 While `admin.user` doesn't inherit anything, and `admin.blog` inherits `blog.writer`.
@@ -416,6 +417,9 @@ $router->post('/example', [
     'uses' => 'ExampleController@index',
 ]);
 ```
+
+You also can pass multiple parameters on `VerifyPermission` and `VerifyRole` middleware,
+example: `role:admin,moderator,true`, the last parameter will be used to determine if user has all role or just any of the role passed, default value would be `false`.
 
 It throws `\DCN\RBAC\Exception\RoleDeniedException` or `\DCN\RBAC\Exception\PermissionDeniedException` exceptions if it goes wrong.
 
