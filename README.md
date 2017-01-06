@@ -1,4 +1,5 @@
 ## [No Longer Maintained, Pull Requests Accepted!]
+Check out https://github.com/mbm-rafal/RBAC
 # RBAC For Laravel 5.3
 Powerful package for handling roles and permissions in Laravel 5.3
 
